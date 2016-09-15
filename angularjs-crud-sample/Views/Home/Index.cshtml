@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "NewsItemView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<h2>News Items</h2>
+<style>
+    #mydiv {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background-color: grey;
+        opacity: .8;
+    }
+    .ajax-loader {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -32px; /* -1 * image width / 2 */
+        margin-top: -32px; /* -1 * image height / 2 */
+        display: block;
+    }
+</style>
+<div data-ng-app data-ng-controller="newsItemController" class="container" id="datetimepicker">
+    <strong class="error">{{ error }}</strong>
+    <div id="mydiv" data-ng-show="loading">
+        <img src="~/Images/ajax-loader.gif" class="ajax-loader" />
+    </div>
+    <p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Add New</a></p>
+    <form name="addNewsItem" data-ng-show="addMode" style="width:600px;margin:0px auto;">
+        <div><label>News Item Text:</label><br /><input id="newsItemText" type="text" size="160" data-ng-model="newNewsItem.NewsItemText" required /></div><br />
+        <label>Date:</label><br />
+        <div>
+            <div class="input-group date form_date col-md-5" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                <input class="form-control" size="16" type="text" data-ng-model="newNewsItem.NewsItemDate">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+        </div>
+        <input id="dtp_input2" type="hidden" data-ng-model="newNewsItem.NewsItemDate" /><br />
+        <br />
+        <br />
+        <input type="submit" value="Add" data-ng-click="add()" data-ng-disabled="!addNewsItem.$valid" class="btn btn-primary" />
+        <input type="button" value="Cancel" data-ng-click="toggleAdd()" class="btn btn-primary" />
+        <input type="button" value="Clear" data-ng-click="reset()" class="btn btn-primary" />
+        <br /><br />
+    </form>
+    <table class="table table-bordered table-hover" style="width:800px">
+        <tr>
+            <th>News Item</th>
+            <th>News Item Date</th>
+        </tr>
+
+        <tr data-ng-repeat="newsItem in newsItems | orderBy: '-NewsItemId'">
+            <td>
+                <p data-ng-hide="newsItem.editMode">{{ newsItem.NewsItemText }}</p>
+                <input data-ng-show="newsItem.editMode" type="text" data-ng-model="newsItem.NewsItemText" />
+            </td>
+            <td>
+                <p data-ng-hide="newsItem.editMode">{{ newsItem.NewsItemDate | date:'MM/dd/yyyy' }}</p>
+            </td>
+            <td>
+                <p data-ng-hide="newsItem.editMode"><a data-ng-click="toggleEdit(newsItem)" href="javascript:;">Edit</a> | <a data-ng-click="deleteNewsItem(newsItem)" href="javascript:;">Delete</a></p>
+                <p data-ng-show="newsItem.editMode"><a data-ng-click="save(newsItem)" href="javascript:;">Save</a> | <a data-ng-click="toggleEdit(newsItem)" href="javascript:;">Cancel</a></p>
+            </td>
+        </tr>
+    </table>
+    <hr />
+</div>
+
+<script type="text/javascript" src="~/Scripts/jquery-1.10.2.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="~/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="~/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="~/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    $('.form_datetime').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
+    });
+    $('.form_date').datetimepicker({
+        language: 'en',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+    $('.form_time').datetimepicker({
+        language: 'en',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 1,
+        minView: 0,
+        maxView: 1,
+        forceParse: 0
+    });
+
+
+
+</script>
+
+
+
+
+
